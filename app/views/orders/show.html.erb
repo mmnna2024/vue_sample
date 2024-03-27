@@ -1,0 +1,18 @@
+<h1>Orders#show</h1>
+
+<% @orders.each do |order| %>
+  <%= order.user.name %><br>
+  <%= order.shipping_address.name %><br>
+  <%= order.shipping_address.price %><br>
+
+  <% total_service_price = 0 %>
+  <% order.items.each do |item| %>
+    <% item.services.each do |service| %><br>
+      <%= service.name %>
+      <%= service.price %>
+      <% total_service_price = service.price + total_service_price %>
+    <% end %>
+  <% end %>
+<% total_price = order.shipping_address.price + total_service_price %>
+<br><%= "Total Price: #{total_price}" %>
+<% end %>

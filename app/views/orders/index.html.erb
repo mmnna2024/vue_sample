@@ -1,0 +1,9 @@
+<%= javascript_pack_tag "order/index.js" %>
+<%= content_tag :div,
+  id: "orderIndex",
+  data: {
+    title: @title,
+    description: @description,
+    contents: @contents,
+  }.to_json do %>
+<% end %>
