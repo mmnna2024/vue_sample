@@ -1,58 +1,45 @@
 <template>
   <div>
-    <table class="contents-table">
-      <tr>
-        <th>衣類選択</th>
-        <th>単価</th>
-        <th>加工方法</th>
-        <th>単価</th>
-        <th>小計</th>
-      </tr>
-      <tr v-for="(v, v_index) in selected.length" :key="`selected_${v_index}`">
-        <td>
-          <select v-model="selected[v_index].clothes">
-            <option disabled value="">依頼する衣類を一つずつお選びください</option>
-            <option v-for="(clothes, index) in clothes" :key="index" :value="clothes">
-              {{ clothes.name }}
-            </option>
-          </select>
-        </td>
+    <div v-for="(v, v_index) in selected.length" :key="`selected_${v_index}`">
+      <div>
+        <label>衣類選択:</label>
+        <select v-model="selected[v_index].clothes">
+          <option disabled value="">依頼する衣類を一つずつお選びください</option>
+          <option v-for="(clothes, cIndex) in clothes" :key="cIndex" :value="clothes">
+            {{ clothes.name }}
+          </option>
+        </select>
+        <span>単価: {{ selected[v_index].clothes.price }}</span>
+      </div>
 
-        <td>
-          <a>{{ selected[v_index].clothes.price }}</a>
-        </td>
+      <div>
+        <label>加工方法:</label>
+        <select v-model="selected[v_index].processing">
+          <option disabled value="">追加で加工を施したい場合はこちらからお選びください</option>
+          <option v-for="(processing, pIndex) in processings" :key="pIndex" :value="processing">
+            {{ processing.name }}
+          </option>
+        </select>
+        <span>単価: {{ selected[v_index].processing.price }}</span>
+      </div>
 
-        <td>
-          <select v-model="selected[v_index].processing">
-            <option disabled value="">追加で加工を施したい場合はこちらからお選びください</option>
-            <option v-for="(processing, index) in processings" :key="index" :value="processing">
-              {{ processing.name }}
-            </option>
-          </select>
-        </td>
+      <div>
+        <span>小計: {{ selected[v_index].clothes.price + selected[v_index].processing.price }}</span>
+      </div>
+    </div>
 
-        <td>
-          <a>{{ selected[v_index].processing.price }}</a>
-        </td>
-
-        <td>
-          <a>{{ selected[v_index].clothes.price + selected[v_index].processing.price }}</a>
-        </td>
-
-      </tr>
-    </table>
+    <div>
+      合計{{ totalPrice }}円
+      <span v-if="totalPrice >= deliveryFreePrice">
+        (送料無料)
+      </span>
+      <span v-else>
+        あと{{ deliveryFreePrice - totalPrice }}円の注文で送料無料
+      </span>
+    </div>
+    <button @click="increment">+</button>
+    <button @click="decrement">-</button>
   </div>
-  <div>
-    合計{{ totalPrice }}円
-    <span v-if="totalPrice >= deliveryFreePrice">
-      (送料無料)
-    </span>
-    <span v-else>
-      あと{{ deliveryFreePrice - totalPrice }}円の注文で送料無料
-    </span>
-  </div>
-  <button @click="increment">+</button>
-  <button @click="decrement">-</button>
 </template>
 
 <script>
