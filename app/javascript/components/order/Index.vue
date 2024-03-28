@@ -1,7 +1,7 @@
 <template>
   <div>
     <HeaderView v-bind:title="initialData.title" v-bind:description="initialData.description" />
-    <Contents v-bind:contents="initialData.contents" />
+    <Contents v-bind:clothes="initialData.clothes" v-bind:processings="initialData.processings" />
   </div>
 </template>
 
