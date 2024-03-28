@@ -13,6 +13,18 @@ environment.loaders.prepend('vue', {
   }]
 })
 
+environment.config.merge({
+  module: {
+    rules: [
+      {
+        test: /\.mjs$/,
+        include: /node_modules/,
+        type: "javascript/auto"
+      }
+    ]
+  }
+})
+
 const { DefinePlugin } = require('webpack')
 environment.plugins.prepend(
     'Define',

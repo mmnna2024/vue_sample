@@ -72,14 +72,14 @@ export default {
       selected: [
         {
           clothes: {
-          id: NaN,
-          name: "",
-          price: 0,
+            id: NaN,
+            name: "",
+            price: 0,
           },
           processing: {
-          id: NaN,
-          name: "",
-          price: 0,
+            id: NaN,
+            name: "",
+            price: 0,
           }
         },
       ],
@@ -90,14 +90,14 @@ export default {
     increment() {
       this.selected.push({
         clothes: {
-        id: NaN,
-        name: "",
-        price: 0
+          id: NaN,
+          name: "",
+          price: 0
         },
         processing: {
-        id: NaN,
-        name: "",
-        price: 0
+          id: NaN,
+          name: "",
+          price: 0
         }
       });
     },
