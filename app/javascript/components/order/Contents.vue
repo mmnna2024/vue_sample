@@ -1,27 +1,43 @@
 <template>
   <div>
-    <button @click="increment">+</button>
-    <button @click="decrement">-</button>
     <table class="contents-table">
       <tr>
         <th>衣類選択</th>
-        <th>料金</th>
+        <th>単価</th>
+        <th>小計</th>
       </tr>
-      <tr v-for="(_) in counter">
+      <tr v-for="(v, v_index) in selected.length" :key="`selected_${v_index}`">
         <td>
-          <select v-model="selected">
+          <select v-model="selected[v_index]" @change="() => setContent(v_index)">
             <option disabled value="">依頼する衣類を一つずつお選びください</option>
-            <option v-for="(content, index) in contents" :key="index" :value="content.name">
+            <option v-for="(content, index) in contents" :key="index" :value="content">
               {{ content.name }}
             </option>
           </select>
         </td>
+
         <td>
-          <a>{{ SelectedPrice }}</a>
+          <a>{{ selected[v_index].price }}</a>
         </td>
+
+        <td>
+          <a>{{ selected[v_index].price }}</a>
+        </td>
+
       </tr>
     </table>
   </div>
+  <div>
+    合計{{ totalPrice }}円
+    <span v-if="totalPrice >= deliveryFreePrice">
+      (送料無料)
+    </span>
+    <span v-else>
+      あと{{ deliveryFreePrice - totalPrice }}円の注文で送料無料
+    </span>
+  </div>
+  <button @click="increment">+</button>
+  <button @click="decrement">-</button>
 </template>
 
 <script>
@@ -34,24 +50,51 @@ export default {
   },
   data() {
     return {
-      selected: '',
-      counter: 3
+      selected: [
+        {
+          id: NaN,
+          name: "",
+          count: 1,
+          price: 0,
+        },
+      ],
+      deliveryFreePrice: 10000,
     };
-  },
-  computed: {
-    SelectedPrice: function () {
-      if (!this.selected) return 0;
-      const item = this.contents.find(({ name }) => name === this.selected);
-      return item ? item.price : 0;
-    },
   },
   methods: {
     increment() {
-      this.counter++;
+      this.selected.push({
+        id: NaN,
+        name: "",
+        count: 0,
+        price: 0
+      });
     },
     decrement() {
-      this.counter--;
-    }
+      if (this.selected.length === 1) return;
+      this.selected.pop();
+    },
+    setContent(index) {
+      // 選択された商品の料金を取得
+      const price = this.contents.find(({ name }) => name === this.selected[index].name).price;
+      // selectedにすでに同一のnameがある場合は対象の個数を1つ増やし, 新しく追加されているselectedは削除する, 重複行を削除するため
+      if (this.selected.filter(({ name }) => name === this.selected[index].name).length > 1) {
+        // 最初に見つかったselectedの個数を1つ増やす
+        this.selected.find(({ name }) => name === this.selected[index].name).count++;
+        // 重複しているselectedを削除
+        this.selected = this.selected.filter((_, i) => i !== index);
+        return;
+      }
+      // 選択された商品の個数が0の場合は1にする
+      if (this.selected[index].count === 0) this.selected[index].count = 1;
+      this.selected[index].price = price;
+    },
+  },
+  computed: {
+    totalPrice() {
+      // 選択された商品の合計金額を計算
+      return this.selected.reduce((acc, cur) => acc + cur.price, 0);
+    },
   },
 };
 </script>
