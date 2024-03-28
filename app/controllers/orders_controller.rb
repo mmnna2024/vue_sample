@@ -3,7 +3,14 @@ class OrdersController < ApplicationController
     @orders = Order.all
     @title = "自動料金表示プログラム"
     @description = "タブを選択すると非同期処理で自動的に料金が表示されます"
-    @contents = Service.where(category_id: 1)
+    @contents = Service.where(category_id: 1).map do |service|
+      {
+        id: service.id,
+        name: service.name,
+        price: service.price,
+        count: 1,
+      }
+    end
   end
 
   def show
