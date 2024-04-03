@@ -1,32 +1,20 @@
 <template>
-  <div>
-    <div v-for="(v, v_index) in selected.length" :key="`selected_${v_index}`">
-      <div>
-        <label>衣類選択:</label>
-        <select v-model="selected[v_index].clothes">
-          <option disabled value="">依頼する衣類を一つずつお選びください</option>
-          <option v-for="(clothes, cIndex) in clothes" :key="cIndex" :value="clothes">
-            {{ clothes.name }}
-          </option>
-        </select>
-        <span>単価: {{ selected[v_index].clothes.price }}</span>
-      </div>
-
-      <div>
-        <label>加工方法:</label>
-        <select v-model="selected[v_index].processing">
-          <option disabled value="">追加で加工を施したい場合はこちらからお選びください</option>
-          <option v-for="(processing, pIndex) in processings" :key="pIndex" :value="processing">
-            {{ processing.name }}
-          </option>
-        </select>
-        <span>単価: {{ selected[v_index].processing.price }}</span>
-      </div>
-
-      <div>
-        <span>小計: {{ selected[v_index].clothes.price + selected[v_index].processing.price }}</span>
-      </div>
-    </div>
+  <div class="app-container">
+    <el-form v-for="(v, v_index) in selected" :key="`selected_${v_index}`" label-width="120px">
+      <el-row :gutter="20">
+        <el-col :span="8">
+          <el-form-item label="衣類カテゴリー" />
+          <el-select v-model="selected[v_index].clothes" placeholder="依頼する衣類を一つずつお選びください">
+            <el-option v-for="clothes in clothes" :key="clothes" :label="clothes.name" :value="clothes">
+            </el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="料金" />
+          <el-input v-model="selected[v_index].clothes.price" readonly></el-input>
+        </el-col>
+      </el-row>
+    </el-form>
 
     <div>
       合計{{ totalPrice }}円
@@ -59,12 +47,12 @@ export default {
       selected: [
         {
           clothes: {
-            id: NaN,
+            id: null,
             name: "",
             price: 0,
           },
           processing: {
-            id: NaN,
+            id: null,
             name: "",
             price: 0,
           }
@@ -77,12 +65,12 @@ export default {
     increment() {
       this.selected.push({
         clothes: {
-          id: NaN,
+          id: null,
           name: "",
           price: 0
         },
         processing: {
-          id: NaN,
+          id: null,
           name: "",
           price: 0
         }
@@ -130,5 +118,22 @@ export default {
 .contents-table th,
 .contents-table td {
   border: 1px solid gray;
+}
+
+.el-row {
+  margin-bottom: 20px;
+}
+
+.el-row:last-child {
+  margin-bottom: 0;
+}
+
+.el-col {
+  border-radius: 4px;
+}
+
+.grid-content {
+  border-radius: 4px;
+  min-height: 36px;
 }
 </style>
